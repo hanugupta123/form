@@ -17,6 +17,7 @@ function showSuccess(input) {
 
 form.addEventListener("submit", function (e) {
   e.preventDefault();
+  e.stopPropagation();
 
   if (username.value === "") {
     showError(username, "username is required");
@@ -28,8 +29,7 @@ form.addEventListener("submit", function (e) {
   } else {
     const emailRegex =
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    const isValidEmail = emailRegex.test(email);
-    console.log(email, isValidEmail);
+    const isValidEmail = emailRegex.test(email.value);
     isValidEmail ? showSuccess(email) : showError(email, "invalid email");
   }
   if (password.value === "") {
@@ -37,9 +37,12 @@ form.addEventListener("submit", function (e) {
   } else {
     showSuccess(password);
   }
+
   if (password2.value === "") {
-    password2 != password && showError(password2, "passwords must match!");
+    showError(password2, "please confirm your password!");
   } else {
-    showSuccess(password2);
+    password2.value !== password.value
+      ? showError(password2, "passwords must match!")
+      : showSuccess(password2);
   }
 });
